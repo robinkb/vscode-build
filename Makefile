@@ -20,14 +20,14 @@ patch-json: ${VSCODE_SRC_DIR}
 	jq --slurp ".[0] * .[1]" ${VSCODE_SRC_DIR}/product.json product.patch.json > product.json
 	mv product.json ${VSCODE_SRC_DIR}/product.json
 
-container: patch-json
+container: ${VSCODE_SRC_DIR}
 	NODE_VERSION=$(shell cat ${VSCODE_SRC_DIR}/.nvmrc)
 	podman build --rm \
 		--file Dockerfile \
 		--tag vscode-build:$$NODE_VERSION \
 		--build-arg NODE_VERSION=$$NODE_VERSION
 
-build: container
+build: patch-json container
 	NODE_VERSION=$(shell cat ${VSCODE_SRC_DIR}/.nvmrc)
 	podman run --rm -ti \
 		--ulimit=nofile=4096:4096 \
