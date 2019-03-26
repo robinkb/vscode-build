@@ -1,0 +1,26 @@
+= Build scripts for Visual Studio Code OSS
+:url-jq: https://stedolan.github.io/jq/
+:url-podman: https://podman.io/
+
+Container-based build scripts to compile Visual Studio Code into an RPM package.
+
+== Quick Start
+
+Make sure that you have `make`, `jq`, and `podman` installed.
+
+----
+$ git clone https://github.com/robinkb/vscode-build
+$ cd vscode-build
+$ make
+----
+
+The RPM package is placed under `target/`.
+
+== Dependencies
+
+The scripts use {url-podman}[Podman] to run the builds in a container.
+Podman is an excellent alternative to Docker that does not require root permissions to create containers.
+
+{url-jq}[jq] is used to patch the `product.json` file included with Visual Studio Code OSS.
+The OSS version is missing the required properties to enable the extension store.
+Some of the properties like the application name are also suffixed with `-oss`, which the patch also removes.
