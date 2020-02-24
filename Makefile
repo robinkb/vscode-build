@@ -27,21 +27,23 @@ container: ${VSCODE_SRC_DIR}
 		--tag vscode-build:$$NODE_VERSION \
 		--build-arg NODE_VERSION=$$NODE_VERSION
 
-build: patch-json container
-	mkdir -p target
+build: patch-json container ${TARGET_DIR}
 	NODE_VERSION=$(shell cat ${VSCODE_SRC_DIR}/.nvmrc)
 	podman run --rm -ti \
 		--ulimit=nofile=4096:4096 \
 		--volume ${PWD}/${VSCODE_SRC_DIR}:/vscode:z \
-		--volume ${PWD}/${TARGET_DIR}:/target:z \
+		--volume ${PWD}/${TARGET_DIR}:/${TARGET_DIR}:z \
 		--workdir /vscode \
 		vscode-build:$$NODE_VERSION \
 		/bin/bash -c "
 			yarn \
 			&& yarn run gulp vscode-linux-x64-min \
 			&& yarn run gulp vscode-linux-x64-build-${VSCODE_PACKAGE} \
-			&& mv /vscode/.build/linux/${VSCODE_PACKAGE}/x86_64/vscode-${VSCODE_VERSION}-*.${VSCODE_PACKAGE} /target/
+			&& mv /vscode/.build/linux/${VSCODE_PACKAGE}/x86_64/vscode-${VSCODE_VERSION}-*.${VSCODE_PACKAGE} /${TARGET_DIR}/
 		"
 
 clean:
 	rm -rf src/* ${TARGET_DIR}
+
+${TARGET_DIR}:
+	mkdir -p ${TARGET_DIR}
