@@ -1,5 +1,5 @@
 VSCODE_PACKAGE = rpm
-VSCODE_VERSION = 1.42.1
+VSCODE_VERSION = 1.45.1
 
 VSCODE_SRC_DIR = src/vscode-${VSCODE_VERSION}
 VSCODE_SRC_URL = https://github.com/Microsoft/vscode/archive/${VSCODE_VERSION}.tar.gz
