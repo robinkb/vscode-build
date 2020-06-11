@@ -1,5 +1,6 @@
 VSCODE_PACKAGE = rpm
-VSCODE_VERSION = 1.45.1
+VSCODE_VERSION = 1.46.0
+NODE_VERSION   = 12
 
 VSCODE_SRC_DIR = src/vscode-${VSCODE_VERSION}
 VSCODE_SRC_URL = https://github.com/Microsoft/vscode/archive/${VSCODE_VERSION}.tar.gz
@@ -21,20 +22,19 @@ patch-json: ${VSCODE_SRC_DIR}
 	mv product.json ${VSCODE_SRC_DIR}/product.json
 
 container: ${VSCODE_SRC_DIR}
-	NODE_VERSION=$(shell cat ${VSCODE_SRC_DIR}/.nvmrc)
 	podman build --rm \
 		--file Dockerfile \
-		--tag vscode-build:$$NODE_VERSION \
-		--build-arg NODE_VERSION=$$NODE_VERSION
+		--tag vscode-build:${NODE_VERSION} \
+		--build-arg NODE_VERSION=${NODE_VERSION}
 
 build: patch-json container ${TARGET_DIR}
-	NODE_VERSION=$(shell cat ${VSCODE_SRC_DIR}/.nvmrc)
 	podman run --rm -ti \
 		--ulimit=nofile=4096:4096 \
 		--volume ${PWD}/${VSCODE_SRC_DIR}:/vscode:z \
 		--volume ${PWD}/${TARGET_DIR}:/${TARGET_DIR}:z \
+		--env npm_config_scripts_prepend_node_path=true \
 		--workdir /vscode \
-		vscode-build:$$NODE_VERSION \
+		vscode-build:${NODE_VERSION} \
 		/bin/bash -c "
 			yarn \
 			&& yarn run gulp vscode-linux-x64-min \
