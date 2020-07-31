@@ -1,9 +1,9 @@
 VSCODE_PACKAGE = rpm
-VSCODE_VERSION = 1.46.0
+VSCODE_VERSION = 1.47.3
 NODE_VERSION   = 12
 
 VSCODE_SRC_DIR = src/vscode-${VSCODE_VERSION}
-VSCODE_SRC_URL = https://github.com/Microsoft/vscode/archive/${VSCODE_VERSION}.tar.gz
+VSCODE_SRC_URL = https://github.com/Microsoft/vscode
 
 TARGET_DIR = target
 
@@ -14,8 +14,7 @@ TARGET_DIR = target
 
 ${VSCODE_SRC_DIR}:
 	mkdir --parents ${VSCODE_SRC_DIR}
-	curl --location ${VSCODE_SRC_URL} \
-		| tar --extract --gzip --directory ${VSCODE_SRC_DIR} --strip-components=1
+	git clone ${VSCODE_SRC_URL} ${VSCODE_SRC_DIR} --branch ${VSCODE_VERSION} --depth 1
 
 patch-json: ${VSCODE_SRC_DIR}
 	jq --slurp ".[0] * .[1]" ${VSCODE_SRC_DIR}/product.json product.patch.json > product.json
