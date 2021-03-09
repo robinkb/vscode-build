@@ -1,5 +1,5 @@
 VSCODE_PACKAGE = rpm
-VSCODE_VERSION = 1.53.0
+VSCODE_VERSION = 1.54.1
 NODE_VERSION   = 12
 
 VSCODE_SRC_DIR = src/vscode-${VSCODE_VERSION}
@@ -28,7 +28,7 @@ container: ${VSCODE_SRC_DIR}
 
 build: patch-json container ${TARGET_DIR}
 	podman run --rm -ti \
-		--ulimit=nofile=4096:4096 \
+		--ulimit=nofile=8192:8192 \
 		--volume ${PWD}/${VSCODE_SRC_DIR}:/vscode:z \
 		--volume ${PWD}/${TARGET_DIR}:/${TARGET_DIR}:z \
 		--env npm_config_scripts_prepend_node_path=true \
