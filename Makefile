@@ -42,7 +42,7 @@ build: patch-json container ${TARGET_DIR}
 		"
 
 clean:
-	rm -rf src/* ${TARGET_DIR}
+	rm -rf ./src/* ./${TARGET_DIR}/
 
 ${TARGET_DIR}:
 	mkdir -p ${TARGET_DIR}
