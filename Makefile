@@ -1,6 +1,6 @@
 VSCODE_PACKAGE = rpm
-VSCODE_VERSION = 1.55.2
-NODE_VERSION   = 12
+VSCODE_VERSION = 1.56.0
+NODE_VERSION   = 14
 
 VSCODE_SRC_DIR = src/vscode-${VSCODE_VERSION}
 VSCODE_SRC_URL = https://github.com/Microsoft/vscode
@@ -38,7 +38,7 @@ build: patch-json container ${TARGET_DIR}
 			yarn \
 			&& yarn run gulp vscode-linux-x64-min \
 			&& yarn run gulp vscode-linux-x64-build-${VSCODE_PACKAGE} \
-			&& mv /vscode/.build/linux/${VSCODE_PACKAGE}/x86_64/vscode-${VSCODE_VERSION}-*.${VSCODE_PACKAGE} /${TARGET_DIR}/
+			&& mv /vscode/.build/linux/${VSCODE_PACKAGE}/x86_64/vscode*.${VSCODE_PACKAGE} /${TARGET_DIR}/
 		"
 
 clean:
