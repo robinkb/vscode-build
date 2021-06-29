@@ -1,6 +1,11 @@
+# More robust scripts
+export SHELL = /bin/bash
+export SHELLOPTS := errexit:pipefail:nounset
+# Use one shell instance to execute all steps in a target.
+.ONESHELL:
+
 VSCODE_PACKAGE = rpm
 VSCODE_VERSION = 1.57.1
-NODE_VERSION   = 14
 
 VSCODE_SRC_DIR = src/vscode-${VSCODE_VERSION}
 VSCODE_SRC_URL = https://github.com/Microsoft/vscode
@@ -8,7 +13,6 @@ VSCODE_SRC_URL = https://github.com/Microsoft/vscode
 TARGET_DIR = target
 
 .DEFAULT_GOAL = build
-.ONESHELL:
 
 .PHONY: patch-json container build
 
@@ -21,6 +25,9 @@ patch-json: ${VSCODE_SRC_DIR}
 	mv product.json ${VSCODE_SRC_DIR}/product.json
 
 container: ${VSCODE_SRC_DIR}
+	$(eval NODE_VERSION = $(shell \
+		jq -r '.registrations[] | select(.component.git.name == "nodejs") | .version' ${VSCODE_SRC_DIR}/cgmanifest.json
+	))
 	podman build --rm \
 		--file Dockerfile \
 		--tag vscode-build:${NODE_VERSION} \
