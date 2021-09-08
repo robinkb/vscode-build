@@ -5,7 +5,7 @@ export SHELLOPTS := errexit:pipefail:nounset
 .ONESHELL:
 
 VSCODE_PACKAGE = rpm
-VSCODE_VERSION = 1.59.0
+VSCODE_VERSION = 1.60.0
 
 VSCODE_SRC_DIR = src/vscode-${VSCODE_VERSION}
 VSCODE_SRC_URL = https://github.com/Microsoft/vscode
