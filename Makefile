@@ -5,7 +5,8 @@ export SHELLOPTS := errexit:pipefail:nounset
 .ONESHELL:
 
 VSCODE_PACKAGE = rpm
-VSCODE_VERSION = 1.63.2
+VSCODE_VERSION = 1.64.1
+NODE_VERSION = 16
 
 VSCODE_SRC_DIR = src/vscode-${VSCODE_VERSION}
 VSCODE_SRC_URL = https://github.com/Microsoft/vscode
@@ -25,9 +26,6 @@ patch-json: ${VSCODE_SRC_DIR}
 	mv product.json ${VSCODE_SRC_DIR}/product.json
 
 container: ${VSCODE_SRC_DIR}
-	$(eval NODE_VERSION = $(shell \
-		jq -r '.registrations[] | select(.component.git.name == "nodejs") | .version' ${VSCODE_SRC_DIR}/cgmanifest.json
-	))
 	podman build --rm \
 		--file Dockerfile \
 		--tag vscode-build:${NODE_VERSION} \
